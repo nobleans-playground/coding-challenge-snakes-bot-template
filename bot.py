@@ -29,6 +29,10 @@ class SimpleEater(Bot):
     def name(self):
         return 'Simple Eater'
 
+    @property
+    def contributor(self):
+        return 'Nobleo'
+
     def determine_next_move(self, snakes: List[Snake], candies: List[np.array]) -> Move:
         # First find your own snake
         snake = next(s for s in snakes if s.id == self.id)
