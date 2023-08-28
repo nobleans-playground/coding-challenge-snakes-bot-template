@@ -1,5 +1,5 @@
 from random import choice
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -8,25 +8,31 @@ from ...constants import Move, MOVE_VALUE_TO_DIRECTION
 from ...snake import Snake
 
 
-def is_on_grid(pos, grid_size):
+def is_on_grid(pos: np.array, grid_size: Tuple[int, int]) -> bool:
+    """
+    Check if a position is still on the grid
+    """
     return 0 <= pos[0] < grid_size[0] and 0 <= pos[1] < grid_size[1]
 
 
-def collides(head, snakes):
+def collides(pos: np.array, snakes: List[Snake]) -> bool:
+    """
+    Check if a position is occupied by any of the snakes
+    """
     for snake in snakes:
-        if snake.collides(head):
+        if snake.collides(pos):
             return True
     return False
 
 
-class SimpleEater(Bot):
+class ExampleBot(Bot):
     """
-    Move towards food, but stay away from the heads of other snakes
+    Moves randomly, but makes sure it doesn't collide with other snakes
     """
 
     @property
     def name(self):
-        return 'Simple Eater'
+        return 'Greedy Gerard'
 
     @property
     def contributor(self):
@@ -34,7 +40,7 @@ class SimpleEater(Bot):
 
     def determine_next_move(self, snake: Snake, other_snakes: List[Snake], candies: List[np.array]) -> Move:
         moves = self._determine_possible_moves(snake, other_snakes[0])
-        return self.choose_towards_candy(moves, snake, candies)
+        return self.choose_move(moves)
 
     def _determine_possible_moves(self, snake, other_snake) -> List[Move]:
         """
@@ -56,12 +62,8 @@ class SimpleEater(Bot):
         else:
             return on_grid
 
-    def choose_towards_candy(self, moves: List[Move], snake, candies):
-        if not candies:
-            return choice(moves)
-        return min(moves,
-                   key=lambda move: self.distance_to_closest_candy(snake[0] + MOVE_VALUE_TO_DIRECTION[move], candies))
-
-    def distance_to_closest_candy(self, position, candies):
-        distances = [np.linalg.norm(position - candy, 1) for candy in candies]
-        return min(distances)
+    def choose_move(self, moves: List[Move]) -> Move:
+        """
+        Randomly pick a move
+        """
+        return choice(moves)
