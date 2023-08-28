@@ -33,12 +33,8 @@ class SimpleEater(Bot):
     def contributor(self):
         return 'Nobleo'
 
-    def determine_next_move(self, snakes: List[Snake], candies: List[np.array]) -> Move:
-        # First find your own snake
-        snake = next(s for s in snakes if s.id == self.id)
-        other_snake = next(s for s in snakes if s.id != self.id)
-
-        moves = self._determine_possible_moves(snake, other_snake)
+    def determine_next_move(self, snake: Snake, other_snakes: List[Snake], candies: List[np.array]) -> Move:
+        moves = self._determine_possible_moves(snake, other_snakes[0])
         return self.choose_towards_candy(moves, snake, candies)
 
     def _determine_possible_moves(self, snake, other_snake) -> List[Move]:
