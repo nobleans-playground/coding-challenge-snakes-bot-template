@@ -14,9 +14,8 @@ def is_on_grid(pos, grid_size):
 
 def collides(head, snakes):
     for snake in snakes:
-        for segment in snake:
-            if np.array_equal(head, segment):
-                return True
+        if snake.collides(head):
+            return True
     return False
 
 
